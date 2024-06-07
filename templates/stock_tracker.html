@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/stock_tracker.css') }}">
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-3.0.1.min.js"></script>
+    <script src="{{ url_for('static', filename= 'js/stock_tracker.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+{% endblock stylesheets %}
+{% block content %}
+    <div class="title-container">
+        <h1>Historical Stock Tracker</h1>
+        <div class="form-container">
+            <form action="/stock-tracker" method = "POST">
+                <div class="search-container">
+                    <input name="ticker" type="ticker" class="tickerInput" placeholder="Ticker">
+                    <button type="submit" class="btn ticker-search-btn">🔎︎</button>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+    <div class="stock-container">
+        <canvas id="lineChart" width="900" height="400"></canvas>
+        <div class="stock-info">
+            <h2>{{ info['shortName'] }}</h2>
+            <ul>
+                <li>Address: {{ info['address1'] }}</li>
+                <li>Industry: {{ info['industry'] }}</li>
+                <li>Current Price: ${{ info['currentPrice'] }}</li>
+                <li>Revenue: ${{ info['totalRevenue'] }}</li>
+                <li>EPS: {{ info['trailingEps'] }}</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        var ctx = document.getElementById("lineChart").getContext("2d");
+        console.log(ctx);
+        var lineChart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: {{ labels | safe }},
+                datasets: [
+                    {
+                        label: "Data points",
+                        data: {{ data | safe}},
+                        fill: false,
+                        borderColor: "rgb(50, 100, 120)",
+                        lineTension: 0.1,
+                        radius: 0.2
+                    }
+                ]
+
+            },
+            options: {
+                responsive: false
+            }
+        });
+    </script>
+{% endblock content %}

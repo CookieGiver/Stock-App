@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/portfolio.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+
+{% endblock stylesheets %}
+{% block content %}    
+    <h1>Mock Portfolio</h1>
+    <div class="portfolio-container">
+        <div class="form-container">
+            <form action="/portfolio/" method = "POST">
+                <div class="ticker-container" id="ticker-container">
+                    <h2>Stock Tickers</h2>
+                    <button type="button" onclick=addTicker() id="add-ticker-btn" class="btn add-ticker">+</button>
+    
+                    <script>
+                        let num = 0;
+                        function addTicker() {
+                            var btn = document.getElementById("add-ticker-btn");
+                            var container = document.getElementById("ticker-container")
+                            var input_div = document.createElement('div');
+                            input_div.classList.add('ticker-row')
+    
+                            var ticker_input = document.createElement('input')
+                            input_div.appendChild(ticker_input)
+                            ticker_input.setAttribute('name', `ticker${num}`)
+                            ticker_input.setAttribute('class', `tickerInput`)
+                            ticker_input.setAttribute('placeholder', "Ticker")
+    
+                            var ammount_input = document.createElement('input')
+                            input_div.appendChild(ammount_input)
+                            ammount_input.setAttribute('name', `ammount${num}`)
+                            ammount_input.setAttribute('class', `ammountInput`)
+                            ammount_input.setAttribute('placeholder', `Ammount: $`)
+    
+                            container.insertBefore(input_div, btn);
+                            num += 1
+                        }
+                    </script>
+                </div>
+                <div class="range-container">
+                    <h2>Start Date</h2>
+                    <input name="startDateInput" class="start-date-input" type="date">
+                </div>
+    
+                <button type="submit" class="btn simulate-btn">Simuate</button>
+            </form>
+            <div id="positions-container" class="positions-container">
+                
+                <div class="positions-description stock-info">
+                    <h2>Positions</h2>
+
+                    <h3>Start Date: {{ start_date }}</h3>
+                    {% for i in range(tickers | length) %}
+                        <div class="position">
+                            <span>{{ tickers[i] }}:  {{ positions[i] | round(2)  }} Shares  ->  ${{ data[i][0] | round(2) }}</span>
+                        </div>
+                    {% endfor %}
+                    <h3>Today: {{ today }}</h3>
+                    {% for i in range(tickers | length) %}
+                        <div class="position">
+                            <span>{{ tickers[i] }}:  {{ positions[i] | round(2)  }} Shares  ->  ${{ data[i][-1] | round(2) }}</span>
+                        </div>
+                    {% endfor %}                
+                </div>
+                {% for info in information %}
+                    <div class="stock-info blue-text">
+                        <h2>{{ info['shortName'] }}</h2>
+                        <ul>
+                            <li>Address: {{ info['address1'] }}</li>
+                            <li>Industry: {{ info['industry'] }}</li>
+                            <li>Current Price: ${{ info['currentPrice'] }}</li>
+                            <li>Revenue: ${{ info['totalRevenue'] }}</li>
+                            <li>EPS: {{ info['trailingEps'] }}</li>
+                            <li>Risk: {{ info['overallRisk'] }}</li>
+                            <li>Debt/Equity: {{ info['debtToEquity'] }}</li>
+                            <li>Short Ratio: {{ info['shortRatio'] }}</li>
+                            <li>Position: {{ info['position'] | round(2) }} = ${{ (info['position'] * info['currentPrice']) | round(2) }}</li>
+                        </ul>
+                    </div>
+                {% endfor %}
+                <div class="fill"></div>
+                <button onclick=back() class="slideshow-btn">◄</button>
+                <button onclick=forward() class="slideshow-btn">►</button>
+            </div>
+        </div>
+        <div class="chart-container">
+            <canvas id="lineChart"></canvas>
+        </div>
+        <script>
+            var ctx = document.getElementById("lineChart").getContext("2d");
+            console.log(ctx);
+            var lineChart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: {{ labels | safe }},
+                    datasets: [
+
+                    ]
+    
+                },
+                options: {
+                    responsive: true
+                }
+            });
+            var colors = ["#ffadad", "#ffd6a5", "#fdffb6", "#caffbf", "#9bf6ff", "#a0c4ff", "#bdb2ff", "#ffc6ff"]
+            var tickers = {{ tickers | safe }}
+            var data = {{ data | safe}}
+            for (let i = 0; i < data.length-1; i++) {
+                var newDataset = {
+                    label: `${tickers[i]}`,
+                    data: data[i],
+                    fill: false,
+                    borderColor: colors[i],
+                    lineTension: 0.1,
+                    radius: 1.5
+                }
+                lineChart.data.datasets.push(newDataset);
+                console.log("hello");
+            }
+            var totalDataset = {
+                    label: `${tickers[tickers.length - 1]}`,
+                    data: data[data.length - 1],
+                    fill: false,
+                    borderColor: "#365486",
+                    lineTension: 0.1,
+                    radius: 1.5
+            }
+            lineChart.data.datasets.push(totalDataset);
+            lineChart.update();
+
+        </script>
+    </div>
+    
+
+    <script>
+        let slideIndex = 0;
+        slideIndex = showSlide(0);
+
+        function back() {
+            slideIndex = showSlide(slideIndex - 1);
+        }
+        function forward() {
+            slideIndex = showSlide(slideIndex + 1);
+        }
+
+        function showSlide(index) {
+            let container = document.getElementById("positions-container");
+            let slides = document.getElementsByClassName("stock-info");
+            let i;
+            if (index < 0) {
+                i = index + slides.length;
+            }
+            else {
+                i = index % slides.length;
+            }
+            console.log(i);
+            if (i != 0) {
+                container.style.backgroundColor = "rgb(255, 255, 255)";
+                container.style.borderWidth = "2px";
+                container.style.borderStyle = "solid";
+                container.style.borderColor = "rgb(0, 0, 0)";
+            }
+            else {
+                container.style.backgroundColor = "#365486";
+                container.style.borderWidth = "0px";
+            }
+            slides[i].style.display = "block";
+            for (let j = 0; j < slides.length; j++) {
+                if (j != i) {
+                    slides[j].style.display = "none";
+                }
+            }
+            return i;
+        }
+    </script>
+
+{% endblock content %}

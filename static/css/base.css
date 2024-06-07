@@ -1,0 +1,52 @@
+:root {
+    --pastel-blue: #DCF2F1;
+    --light-blue: #7FC7D9;
+    --blue: #365486;
+    --dark-blue: #0F1035;
+}
+
+body {
+    margin: 0em;
+    font-family:"Jost", sans-serif;
+    font-weight: 500;
+}
+
+h1 {
+    font-weight: 500;
+}
+
+nav {
+    background-color: var(--blue);
+}
+.nav-container {
+    display: flex;
+}
+.nav-container a {
+    color: white;
+    text-decoration: none;
+    background-color: var(--blue);
+    height: auto;
+    border-radius: 0.7em;
+    margin: 0.8em;
+    margin-right: 0em;
+}
+@keyframes darken {
+    from {background-color: var(--blue);}
+    to {background-color: var(--dark-blue);}
+}
+.nav-container a:hover {
+    animation-name: darken;
+    animation-duration: 1s;
+}
+
+.nav-container a li {
+    list-style-type: none;
+    padding: 1.2em;
+    
+}
+
+.container {
+    padding-left: 3em;
+    padding-right: 3em;
+    padding-top: 1em;
+}

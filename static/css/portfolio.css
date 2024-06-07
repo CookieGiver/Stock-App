@@ -1,0 +1,109 @@
+.portfolio-container {
+    display: flex;
+}
+
+.form-top {
+    display: flex;
+}
+.ticker-container {
+    display: block;
+    margin-right: 10em;
+}
+.tickerInput {
+    width: 20em;
+    height: 3em;
+    border-top-left-radius: 1.5em;
+    border-bottom-left-radius: 1.5em;
+    border: 1px solid grey;
+    padding-left: 1em;
+    margin-bottom: 0.5em;
+    margin-right: 0.2em;
+}
+.ammountInput {
+    text-align: right;
+    width: 10em;
+    height: 3em;
+    border-top-right-radius: 1.5em;
+    border-bottom-right-radius: 1.5em;
+    border: 1px solid grey;
+    padding-right: 2em;
+    margin-bottom: 0.5em;
+}
+
+.add-ticker {
+    background-color: var(--dark-blue);
+    color: white;
+    width: 34em;
+    height: 3em;
+    border-radius: 1.5em;
+    border: 1px solid white;
+    padding-left: 1em;
+}
+.add-ticker:hover {
+    background-color: var(--blue);
+}
+
+.start-date-input {
+    height: 3em;
+    width: 10em;
+    border-radius: 0.5em;
+    border: 1px solid grey;
+    padding-left: 0.5em;
+    padding-right: 0.5em
+}
+
+.simulate-btn {
+    margin-top: 3em;
+    width: 10em;
+    height: 3em;
+    border-radius: 1.5em;
+    border: 2px solid var(--dark-blue);
+    background-color: white;
+}
+.simulate-btn:hover {
+    background-color: rgb(215, 215, 215);
+}
+
+.positions-container {
+    display: flex;
+    background-color: var(--blue);
+    margin-top: 3em;
+    margin-right: 2em;
+    padding: 2em;
+    padding-top: 1em;
+    border-radius: 2em;
+    color: white;
+}
+.fill {
+    flex-grow: 1;
+}
+.blue-text {
+    color: var(--blue);
+}
+.slideshow-btn {
+    background-color: white;
+    margin-top: 1em;
+    margin-left: 0.5em;
+    width: 3em;
+    height: 3em;
+    border-radius: 1.5em;
+    border: none;
+}
+.slideshow-btn:hover {
+    background-color: rgb(221, 224, 239);
+
+}
+
+.position {
+    background-color: var(--blue);
+    margin-left: 1em;
+    margin-bottom: 0.6em;
+}
+h3 {
+    margin-top: 0.4em;
+    margin-bottom: 0.4em;
+}
+
+.chart-container {
+    flex-grow: 1;
+}
